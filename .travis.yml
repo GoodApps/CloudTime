@@ -3,5 +3,13 @@ android:
   components:
     - tools
     - platform-tools
+    - build-tools-22.0.1
 
 sudo: false
+
+install:
+  - cd Android/
+  - ./gradlew build
+
+script:
+  - ./gradlew connectedCheck

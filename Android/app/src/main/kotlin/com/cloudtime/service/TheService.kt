@@ -13,7 +13,6 @@ public final class TheService {
     fun addTimer(duration: Long, unit: TimeUnit) {
         val timer = ParseObject("Timer")
         timer.put("duration", TimeUnit.SECONDS.convert(duration, unit))
-        timer.setACL(ParseACL(ParseUser.getCurrentUser()))
         timer.saveInBackground()
     }
 

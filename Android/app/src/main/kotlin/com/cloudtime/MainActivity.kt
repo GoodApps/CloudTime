@@ -1,10 +1,13 @@
 package com.cloudtime
 
 import android.os.Bundle
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.KeyEvent
 import android.widget.EditText
+import com.cloudtime.dto.Timer
 import com.cloudtime.service.TheService
 import rx.Subscription
 import java.util.concurrent.TimeUnit
@@ -12,11 +15,18 @@ import java.util.concurrent.TimeUnit
 public class MainActivity : BaseActivity() {
 
     private var subscription: Subscription? = null
+    private var listView: RecyclerView? = null
+    private val adapter: TimersAdapter = TimersAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.main_toolbar) as Toolbar)
+        initEditText()
+        initListView()
+    }
+
+    private fun initEditText() {
         val editText = findViewById(R.id.main_edit) as EditText
         editText.setOnEditorActionListener { v, actionId, event ->
             if (event == null || event.getAction() == KeyEvent.ACTION_UP) {
@@ -24,6 +34,12 @@ public class MainActivity : BaseActivity() {
             }
             true
         }
+    }
+
+    private fun initListView() {
+        listView = findViewById(R.id.main_list) as RecyclerView
+        listView!!.setLayoutManager(LinearLayoutManager(this))
+        listView!!.setAdapter(adapter)
     }
 
     override fun onResume() {
@@ -44,9 +60,14 @@ public class MainActivity : BaseActivity() {
         subscription = TheService().loadTimers()
                 .subscribe({
                     Log.e("tag", "size: ${it.size()}")
+                    updateAdapter(it)
                 }, {
                     Log.e("tag", "error", it)
                 })
+    }
+
+    private fun updateAdapter(timers: List<Timer>) {
+        adapter.update(timers)
     }
 
     private fun cancelLoading() {

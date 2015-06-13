@@ -19,18 +19,16 @@ public final class TheService {
     }
 
     public fun loadTimers(): Observable<List<Timer>> {
-        val timersObservable = Observable.create(object : Observable.OnSubscribe<List<Timer>> {
-            override fun call(subscriber: Subscriber<in List<Timer>>) {
-                try {
-                    val list = ParseQuery.getQuery<ParseObject>("Timer").find()
-                            .map { po -> Timer(po.getCreatedAt(), po.getLong("duration")) }
-                    subscriber.onNext(list)
-                } catch (e: ParseException) {
-                    subscriber.onError(e)
-                }
-                subscriber.onCompleted()
+        val timersObservable = Observable.create { subscriber: Subscriber<in List<Timer>> ->
+            try {
+                val list = ParseQuery.getQuery<ParseObject>("Timer").find()
+                        .map { po -> Timer(po.getCreatedAt(), po.getLong("duration")) }
+                subscriber.onNext(list)
+            } catch (e: ParseException) {
+                subscriber.onError(e)
             }
-        })
+            subscriber.onCompleted()
+        }
         return timersObservable
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

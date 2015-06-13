@@ -1,9 +1,7 @@
 package com.cloudtime.service
 
 import com.cloudtime.dto.Timer
-import com.parse.ParseException
-import com.parse.ParseObject
-import com.parse.ParseQuery
+import com.parse.*
 import rx.Observable
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
@@ -15,6 +13,7 @@ public final class TheService {
     fun addTimer(duration: Long, unit: TimeUnit) {
         val timer = ParseObject("Timer")
         timer.put("duration", TimeUnit.SECONDS.convert(duration, unit))
+        timer.setACL(ParseACL(ParseUser.getCurrentUser()))
         timer.saveInBackground()
     }
 

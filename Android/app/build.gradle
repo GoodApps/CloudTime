@@ -39,4 +39,5 @@ dependencies {
     compile 'com.parse.bolts:bolts-android:1.2.0'
     compile files('libs/Parse-1.9.2.jar')
     compile files('libs/ParseCrashReporting-1.9.2.jar')
+    compile 'io.reactivex:rxandroid:0.24.0'
 }

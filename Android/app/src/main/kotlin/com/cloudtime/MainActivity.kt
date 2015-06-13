@@ -1,17 +1,17 @@
 package com.cloudtime
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.KeyEvent
 import android.widget.EditText
 import com.cloudtime.service.TheService
-import com.parse.ParseObject
-import com.parse.SaveCallback
+import rx.Subscription
 import java.util.concurrent.TimeUnit
 
-public class MainActivity : AppCompatActivity() {
+public class MainActivity : BaseActivity() {
+
+    private var subscription: Subscription? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,7 +26,30 @@ public class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        loadTimers()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        cancelLoading()
+    }
+
     private fun addTimer(duration: Long, unit: TimeUnit) {
         TheService().addTimer(duration, unit)
+    }
+
+    private fun loadTimers() {
+        subscription = TheService().loadTimers()
+                .subscribe({
+                    Log.e("tag", "size: ${it.size()}")
+                }, {
+                    Log.e("tag", "error", it)
+                })
+    }
+
+    private fun cancelLoading() {
+        subscription?.unsubscribe()
     }
 }

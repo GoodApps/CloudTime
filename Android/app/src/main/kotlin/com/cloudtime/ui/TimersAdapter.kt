@@ -1,6 +1,7 @@
-package com.cloudtime
+package com.cloudtime.ui
 
 import com.cloudtime.dto.Timer
+import com.cloudtime.ui.common.BaseRecyclerAdapter
 
 public class TimersAdapter : BaseRecyclerAdapter() {
 

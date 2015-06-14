@@ -1,8 +1,11 @@
-package com.cloudtime
+package com.cloudtime.ui
 
 import android.view.View
 import android.widget.TextView
+import com.cloudtime.R
 import com.cloudtime.dto.Timer
+import com.cloudtime.ui.common.BaseViewHolder
+import com.cloudtime.ui.common.ItemAdapter
 
 public class TimerItemAdapter(private val timer: Timer) : ItemAdapter {
 

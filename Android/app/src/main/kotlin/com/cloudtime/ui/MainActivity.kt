@@ -1,4 +1,4 @@
-package com.cloudtime
+package com.cloudtime.ui
 
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
@@ -7,8 +7,10 @@ import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.KeyEvent
 import android.widget.EditText
+import com.cloudtime.R
 import com.cloudtime.dto.Timer
 import com.cloudtime.service.TheService
+import com.cloudtime.ui.common.BaseActivity
 import rx.Subscription
 import java.util.concurrent.TimeUnit
 import kotlin.properties.Delegates

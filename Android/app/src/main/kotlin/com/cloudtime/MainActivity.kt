@@ -11,11 +11,12 @@ import com.cloudtime.dto.Timer
 import com.cloudtime.service.TheService
 import rx.Subscription
 import java.util.concurrent.TimeUnit
+import kotlin.properties.Delegates
 
 public class MainActivity : BaseActivity() {
 
-    private var subscription: Subscription? = null
-    private var listView: RecyclerView? = null
+    private var subscription: Subscription by Delegates.notNull()
+    private var listView: RecyclerView by Delegates.notNull()
     private val adapter: TimersAdapter = TimersAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,8 +39,8 @@ public class MainActivity : BaseActivity() {
 
     private fun initListView() {
         listView = findViewById(R.id.main_list) as RecyclerView
-        listView!!.setLayoutManager(LinearLayoutManager(this))
-        listView!!.setAdapter(adapter)
+        listView.setLayoutManager(LinearLayoutManager(this))
+        listView.setAdapter(adapter)
     }
 
     override fun onResume() {
@@ -71,6 +72,6 @@ public class MainActivity : BaseActivity() {
     }
 
     private fun cancelLoading() {
-        subscription?.unsubscribe()
+        subscription.unsubscribe()
     }
 }

@@ -13,8 +13,8 @@ public class TheService {
 
     fun addTimer(duration: Long, unit: TimeUnit, title: String) {
         val timer = ParseObject(Timer.Metadata.CLASS_NAME)
-        timer.put(Timer::durationInSeconds.name, TimeUnit.SECONDS.convert(duration, unit))
-        timer.put(Timer::title.name, title)
+        timer.put("durationInSeconds", TimeUnit.SECONDS.convert(duration, unit))
+        timer.put("title", title)
         timer.saveInBackground()
     }
 
@@ -41,7 +41,7 @@ public class TheService {
     private fun createTimer(po: ParseObject): Timer {
         return Timer(
                 po.getCreatedAt(),
-                po.getLong(Timer::durationInSeconds.name),
-                po.getString(Timer::title.name))
+                po.getLong("durationInSeconds"),
+                po.getString("title"))
     }
 }

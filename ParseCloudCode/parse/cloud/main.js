@@ -14,7 +14,7 @@ Parse.Cloud.afterSave("Timer", function(request) {
   // from https://www.parse.com/docs/js/guide#cloud-code
   console.log("afterSave on a Timer -- with push !");
 
-  console.log("Before Parse.Push.send");
+  console.log("Before Parse.Push.send -- without alert");
   var query = new Parse.Query(Parse.Installation);
 
   // query.equalTo('gender', 'male');
@@ -26,11 +26,11 @@ Parse.Cloud.afterSave("Timer", function(request) {
     where: query, // Set our Installation query
 //    channels: [ "Mr.T" ],
     data: {
-       alert: "afterSave on a Timer -- Parse.Push.send"
+       //alert: "afterSave on a Timer -- Parse.Push.send"
     }
   });
 
-  console.log("After Parse.Push.send");
+  console.log("After Parse.Push.send -- without alert");
 //  query = new Parse.Query("Post");
 //  query.get(request.object.get("post").id, {
 //    success: function(post) {

@@ -1,14 +1,15 @@
 package com.cloudtime.service
 
 import com.cloudtime.dto.Timer
-import com.parse.*
+import com.parse.ParseException
+import com.parse.ParseObject
+import com.parse.ParseQuery
 import rx.Observable
 import rx.Subscriber
-import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 
-public final class TheService {
+public class TheService {
 
     fun addTimer(duration: Long, unit: TimeUnit, title: String) {
         val timer = ParseObject(Timer.Metadata.CLASS_NAME)
@@ -17,23 +18,30 @@ public final class TheService {
         timer.saveInBackground()
     }
 
-    public fun loadTimers(): Observable<List<Timer>> {
-        val timersObservable = Observable.create { subscriber: Subscriber<in List<Timer>> ->
-            try {
-                val list = ParseQuery.getQuery<ParseObject>(Timer.Metadata.CLASS_NAME).find()
-                        .map { po : ParseObject -> Timer(
-                                po.getCreatedAt(),
-                                po.getLong(Timer::durationInSeconds.name),
-                                po.getString(Timer::title.name))
-                        }
-                subscriber.onNext(list)
-            } catch (e: ParseException) {
-                subscriber.onError(e)
-            }
-            subscriber.onCompleted()
-        }
-        return timersObservable
+    fun loadTimers(): Observable<List<Timer>> {
+        return Observable.create { it: Subscriber<in List<Timer>> -> onLoadTimers(it) }
                 .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    private fun onLoadTimers(subscriber: Subscriber<in List<Timer>>) {
+        try {
+            subscriber.onNext(loadTimersImpl())
+        } catch (e: ParseException) {
+            subscriber.onError(e)
+        }
+        subscriber.onCompleted()
+    }
+
+    private fun loadTimersImpl(): List<Timer> {
+        return ParseQuery.getQuery<ParseObject>(Timer.Metadata.CLASS_NAME)
+                .find()
+                .map { createTimer(it) }
+    }
+
+    private fun createTimer(po: ParseObject): Timer {
+        return Timer(
+                po.getCreatedAt(),
+                po.getLong(Timer::durationInSeconds.name),
+                po.getString(Timer::title.name))
     }
 }

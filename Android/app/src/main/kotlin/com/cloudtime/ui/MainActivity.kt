@@ -16,6 +16,7 @@ import com.cloudtime.service.TheService
 import com.parse.ParseQueryAdapter
 import com.parse.ParseUser
 import rx.Subscription
+import rx.android.schedulers.AndroidSchedulers
 import java.util.concurrent.TimeUnit
 import kotlin.properties.Delegates
 
@@ -70,6 +71,7 @@ public class MainActivity : BaseActivity() {
 
     private fun loadTimers() {
         subscription = TheService().loadTimers()
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     Log.e("tag", "size: ${it.size()}")
                     updateAdapter(it)

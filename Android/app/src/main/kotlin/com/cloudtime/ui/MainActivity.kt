@@ -27,17 +27,12 @@ public class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         ParseUser.logInInBackground( "test1", "pass1", { user, exc ->
             val s = "$user --- $exc"
             Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
-
-//            val adapter = ParseQueryAdapter(getApplicationContext(), "Timer")
-//            adapter.
             Log.d("parse_login", s)
         })
-
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.main_activity)
         setSupportActionBar(findViewById(R.id.main_toolbar) as Toolbar)
         initEditText()
         initListView()

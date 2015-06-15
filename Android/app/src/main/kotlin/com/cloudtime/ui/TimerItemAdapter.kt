@@ -19,7 +19,7 @@ public class TimerItemAdapter(private val timer: Timer) : ItemAdapter {
 
     override fun onBind(holder: BaseViewHolder) {
         val h = holder as Holder
-        h.textView.setText("${timer.durationInSeconds / 60} minutes")
+        h.textView.setText("${timer.durationInSeconds / 60} minutes; " + timer.title)
     }
 
     class Holder(itemView: View) : BaseViewHolder(itemView) {

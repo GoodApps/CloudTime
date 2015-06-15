@@ -11,6 +11,10 @@ import com.cloudtime.R
 import com.cloudtime.dto.Timer
 import com.cloudtime.service.TheService
 import com.cloudtime.ui.common.BaseActivity
+import android.widget.Toast
+import com.cloudtime.service.TheService
+import com.parse.ParseQueryAdapter
+import com.parse.ParseUser
 import rx.Subscription
 import java.util.concurrent.TimeUnit
 import kotlin.properties.Delegates
@@ -23,6 +27,16 @@ public class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        ParseUser.logInInBackground( "test1", "pass1", { user, exc ->
+            val s = "$user --- $exc"
+            Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
+
+//            val adapter = ParseQueryAdapter(getApplicationContext(), "Timer")
+//            adapter.
+            Log.d("parse_login", s)
+        })
+
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.main_toolbar) as Toolbar)
         initEditText()
@@ -33,7 +47,7 @@ public class MainActivity : BaseActivity() {
         val editText = findViewById(R.id.main_edit) as EditText
         editText.setOnEditorActionListener { v, actionId, event ->
             if (event == null || event.getAction() == KeyEvent.ACTION_UP) {
-                addTimer(15, TimeUnit.MINUTES)
+                addTimer(15, TimeUnit.MINUTES, editText.getText().toString())
             }
             true
         }
@@ -55,8 +69,8 @@ public class MainActivity : BaseActivity() {
         cancelLoading()
     }
 
-    private fun addTimer(duration: Long, unit: TimeUnit) {
-        TheService().addTimer(duration, unit)
+    private fun addTimer(duration: Long, unit: TimeUnit, title: String) {
+        TheService().addTimer(duration, unit, title)
     }
 
     private fun loadTimers() {

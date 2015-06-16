@@ -41,7 +41,11 @@ public class MainActivity : BaseActivity(), LoginDialog.DialogListener {
         val editText = findViewById(R.id.main_edit) as EditText
         editText.setOnEditorActionListener { v, actionId, event ->
             if (event == null || event.getAction() == KeyEvent.ACTION_UP) {
-                addTimer(15, TimeUnit.MINUTES, editText.getText().toString())
+                val text = editText.getText().toString().trim()
+                if (text.isNotEmpty()) {
+                    addTimer(15, TimeUnit.MINUTES, text)
+                    editText.setText("")
+                }
             }
             true
         }

@@ -9,12 +9,12 @@ import rx.Subscriber
 import rx.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 
-public class TheService {
+public class TimerService {
 
     fun addTimer(duration: Long, unit: TimeUnit, title: String) {
         val timer = ParseObject(Timer.Metadata.CLASS_NAME)
         timer.put("durationInSeconds", TimeUnit.SECONDS.convert(duration, unit))
-        timer.put("title", title)
+        //timer.put("title", title)
         timer.saveInBackground()
     }
 

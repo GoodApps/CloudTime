@@ -9,12 +9,8 @@ import android.view.KeyEvent
 import android.widget.EditText
 import com.cloudtime.R
 import com.cloudtime.dto.Timer
-import com.cloudtime.service.TheService
+import com.cloudtime.service.TimerService
 import com.cloudtime.ui.common.BaseActivity
-import android.widget.Toast
-import com.cloudtime.service.TheService
-import com.parse.ParseQueryAdapter
-import com.parse.ParseUser
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import java.util.concurrent.TimeUnit
@@ -61,11 +57,11 @@ public class MainActivity : BaseActivity() {
     }
 
     private fun addTimer(duration: Long, unit: TimeUnit, title: String) {
-        TheService().addTimer(duration, unit, title)
+        TimerService().addTimer(duration, unit, title)
     }
 
     private fun loadTimers() {
-        subscription = TheService().loadTimers()
+        subscription = TimerService().loadTimers()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     Log.e("tag", "size: ${it.size()}")

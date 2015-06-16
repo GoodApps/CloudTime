@@ -6,28 +6,35 @@ import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.KeyEvent
+import android.widget.Button
 import android.widget.EditText
 import com.cloudtime.R
 import com.cloudtime.dto.Timer
 import com.cloudtime.service.TimerService
 import com.cloudtime.ui.common.BaseActivity
+import com.cloudtime.ui.login.LoginDialog
+import com.parse.ParseUser
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import java.util.concurrent.TimeUnit
 import kotlin.properties.Delegates
 
-public class MainActivity : BaseActivity() {
+public class MainActivity : BaseActivity(), LoginDialog.DialogListener {
 
     private var subscription: Subscription by Delegates.notNull()
+
     private var listView: RecyclerView by Delegates.notNull()
+    private var loginButton: Button by Delegates.notNull()
+
     private val adapter: TimersAdapter = TimersAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+        super<BaseActivity>.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
         setSupportActionBar(findViewById(R.id.main_toolbar) as Toolbar)
         initEditText()
         initListView()
+        initLoginButton()
     }
 
     private fun initEditText() {
@@ -46,13 +53,25 @@ public class MainActivity : BaseActivity() {
         listView.setAdapter(adapter)
     }
 
+    private fun initLoginButton() {
+        loginButton = findViewById(R.id.login_button) as Button
+        loginButton.setOnClickListener {
+            val dialog = LoginDialog();
+            dialog.show(getSupportFragmentManager(), "Log In");
+        }
+        if ( ParseUser.getCurrentUser() != null ) {
+            loginButton.setText("Change user")
+        }
+    }
+
+
     override fun onResume() {
-        super.onResume()
+        super<BaseActivity>.onResume()
         loadTimers()
     }
 
     override fun onPause() {
-        super.onPause()
+        super<BaseActivity>.onPause()
         cancelLoading()
     }
 
@@ -77,4 +96,14 @@ public class MainActivity : BaseActivity() {
     private fun cancelLoading() {
         subscription.unsubscribe()
     }
+
+    override fun onDialogPositiveClick() {
+        throw UnsupportedOperationException()
+    }
+
+    override fun onDialogNegativeClick() {
+        throw UnsupportedOperationException()
+    }
+
+
 }

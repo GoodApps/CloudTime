@@ -23,5 +23,10 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Log In or Sign Up"
+            android:id="@+id/login_button" android:layout_gravity="center_horizontal"/>
 
 </LinearLayout>

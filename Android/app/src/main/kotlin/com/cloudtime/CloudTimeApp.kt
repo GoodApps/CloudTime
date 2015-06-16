@@ -6,7 +6,7 @@ import com.parse.ParseACL
 import com.parse.ParseInstallation
 import com.parse.ParseUser
 
-public class MyThirdApp : Application() {
+public class CloudTimeApp : Application() {
 
     override fun onCreate() {
         super.onCreate()

@@ -63,16 +63,15 @@ public class MainActivity : BaseActivity() {
     private fun loadTimers() {
         subscription = TimerService().loadTimers()
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    Log.e("tag", "size: ${it.size()}")
-                    updateAdapter(it)
-                }, {
-                    Log.e("tag", "error", it)
-                })
+                .subscribe({ updateAdapter(it) }, { handleError(it) })
     }
 
     private fun updateAdapter(timers: List<Timer>) {
         adapter.update(timers)
+    }
+
+    private fun handleError(t: Throwable) {
+        Log.e("tag", "error", t)
     }
 
     private fun cancelLoading() {

@@ -5,9 +5,4 @@ import java.util.Date
 public class Timer(
         val startedAt: Date,
         val durationInSeconds: Long,
-        val title: String
-) {
-    object Metadata {
-        val CLASS_NAME = "Timer"
-    }
-}
+        val title: String)

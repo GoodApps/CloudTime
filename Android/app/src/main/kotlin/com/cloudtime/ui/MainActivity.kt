@@ -63,7 +63,6 @@ public class MainActivity : BaseActivity(), LoginDialog.DialogListener {
 
             loadTimers()
         }
-
     }
 
     private fun initEditText() {

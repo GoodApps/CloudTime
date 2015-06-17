@@ -11,10 +11,17 @@ import java.util.concurrent.TimeUnit
 
 public class TimerService {
 
+    companion object {
+        private val timerClass = "Timer"
+        private val durationColumn = "durationInSeconds"
+        private val titleColumn = "title"
+        private val startedAtColumn = "startedAt"
+    }
+
     fun addTimer(duration: Long, unit: TimeUnit, title: String) {
-        val timer = ParseObject(Timer.Metadata.CLASS_NAME)
-        timer.put("durationInSeconds", TimeUnit.SECONDS.convert(duration, unit))
-        timer.put("title", title)
+        val timer = ParseObject(timerClass)
+        timer.put(durationColumn, TimeUnit.SECONDS.convert(duration, unit))
+        timer.put(titleColumn, title)
         timer.saveInBackground()
     }
 
@@ -33,15 +40,15 @@ public class TimerService {
     }
 
     private fun loadTimersImpl(): List<Timer> {
-        return ParseQuery.getQuery<ParseObject>(Timer.Metadata.CLASS_NAME)
+        return ParseQuery.getQuery<ParseObject>(timerClass)
                 .find()
                 .map { createTimer(it) }
     }
 
     private fun createTimer(po: ParseObject): Timer {
         return Timer(
-                po.getDate("startedAt"),
-                po.getLong("durationInSeconds"),
-                po.getString("title"))
+                po.getDate(startedAtColumn),
+                po.getLong(durationColumn),
+                po.getString(titleColumn))
     }
 }

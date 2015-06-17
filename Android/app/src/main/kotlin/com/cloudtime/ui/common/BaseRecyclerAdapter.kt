@@ -9,7 +9,7 @@ import java.util.ArrayList
 
 public open class BaseRecyclerAdapter : RecyclerView.Adapter<BaseViewHolder>() {
 
-    private val items: MutableList<ItemAdapter> = ArrayList()
+    private val items = ArrayList<ItemAdapter>()
 
     fun clearItems() {
         items.clear()

@@ -1,5 +1,9 @@
 package com.cloudtime.ui
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -8,6 +12,7 @@ import android.util.Log
 import android.view.KeyEvent
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import com.cloudtime.R
 import com.cloudtime.dto.Timer
 import com.cloudtime.service.TimerService
@@ -30,11 +35,35 @@ public class MainActivity : BaseActivity(), LoginDialog.DialogListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super<BaseActivity>.onCreate(savedInstanceState)
+
         setContentView(R.layout.main_activity)
         setSupportActionBar(findViewById(R.id.main_toolbar) as Toolbar)
         initEditText()
         initListView()
         initLoginButton()
+
+        registerReceiver()
+    }
+
+    private fun registerReceiver() {
+        val intentFilter = IntentFilter()
+//        intentFilter.addAction("com.google.android.c2dm.intent.RECEIVE")
+        intentFilter.addAction("com.parse.push.intent.RECEIVE")
+//        intentFilter.addAction("com.parse.push.intent.DELETE")
+//        intentFilter.addAction("com.parse.push.intent.OPEN")
+//        intentFilter.addAction("com.example.UPDATE_STATUS")
+
+        registerReceiver(PushNotificationBroadcastReceiver(), intentFilter)
+    }
+
+    inner class PushNotificationBroadcastReceiver : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            Toast.makeText(context, "MyBroadcastReceiver 2: onReceive: "
+                    + context + ";" + intent, Toast.LENGTH_SHORT).show()
+
+            loadTimers()
+        }
+
     }
 
     private fun initEditText() {

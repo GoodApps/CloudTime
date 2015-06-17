@@ -40,7 +40,7 @@ public class TimerService {
 
     private fun createTimer(po: ParseObject): Timer {
         return Timer(
-                po.getCreatedAt(),
+                po.getDate("startedAt"),
                 po.getLong("durationInSeconds"),
                 po.getString("title"))
     }

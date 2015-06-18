@@ -9,10 +9,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.util.Log
-import android.view.ContextMenu
-import android.view.KeyEvent
-import android.view.MenuItem
-import android.view.View
+import android.view.*
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -68,6 +65,13 @@ public class MainActivity : BaseActivity(), LoginDialog.DialogListener {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater = getMenuInflater()
+        menu.add(0, R.id.refresh_timers, 0, "Refresh")
+//        inflater.inflate(R.menu.timers_menu, menu)
+        return true
+    }
+
     /** Quick hackish version using ints, sorry */
     private val MENU_ITEM_COMMAND_DELETE_TIMER = 0
     private val MENU_ITEM_COMMAND_START_TIMER = 1
@@ -97,6 +101,17 @@ public class MainActivity : BaseActivity(), LoginDialog.DialogListener {
             MENU_ITEM_COMMAND_STOP_TIMER -> currentContextMenuItem?.stopTimer()
         }
         return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle item selection
+        when (item.getItemId()) {
+            R.id.refresh_timers -> {
+                loadTimers()
+                return true
+            }
+            else -> return super<BaseActivity>.onOptionsItemSelected(item)
+        }
     }
 
 
@@ -171,6 +186,5 @@ public class MainActivity : BaseActivity(), LoginDialog.DialogListener {
     override fun onDialogNegativeClick() {
         throw UnsupportedOperationException()
     }
-
 
 }

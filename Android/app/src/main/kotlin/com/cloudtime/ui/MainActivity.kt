@@ -66,8 +66,10 @@ public class MainActivity : BaseActivity(), LoginDialog.DialogListener {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        val inflater = getMenuInflater()
-        menu.add(0, R.id.refresh_timers, 0, "Refresh")
+//        val inflater = getMenuInflater()
+        val menuItem: MenuItem = menu.add(0, R.id.refresh_timers, 0, "Refresh")
+        menuItem.setIcon(android.R.drawable.ic_menu_rotate)
+        menuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
 //        inflater.inflate(R.menu.timers_menu, menu)
         return true
     }

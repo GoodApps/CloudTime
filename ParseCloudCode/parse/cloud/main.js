@@ -9,10 +9,9 @@ Parse.Cloud.define("hello", function(request, response) {
 //  response.success("Hello world -- afterSave!");
 //});
 
-
-Parse.Cloud.afterSave("Timer", function(request) {
+function sendPushNotification(request) {
   // from https://www.parse.com/docs/js/guide#cloud-code
-  console.log("afterSave on a Timer -- with push !");
+  console.log("sendPushNotification on a Timer");
 
   console.log("Before Parse.Push.send -- without alert");
   var query = new Parse.Query(Parse.Installation);
@@ -41,7 +40,12 @@ Parse.Cloud.afterSave("Timer", function(request) {
 //      console.error("Got an error " + error.code + " : " + error.message);
 //    }
 //  });
-});
+}
+
+var className = "Timer"
+
+Parse.Cloud.afterSave(className, sendPushNotification);
+Parse.Cloud.afterDelete(className, sendPushNotification);
 
 
 // 2 empty lines for Maciej to have the end visible ;)

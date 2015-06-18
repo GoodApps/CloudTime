@@ -45,10 +45,18 @@ public class TimerService {
                 .map { createTimer(it) }
     }
 
-    private fun createTimer(po: ParseObject): Timer {
+    private fun createTimer(backendObject: ParseObject): Timer {
         return Timer(
-                po.getDate(startedAtColumn),
-                po.getLong(durationColumn),
-                po.getString(titleColumn))
+                backendObject.getCreatedAt(),
+                backendObject.getDate(Timer::startedAt.name),
+                backendObject.getLong(Timer::durationInSeconds.name),
+                backendObject.getString(Timer::title.name),
+                backendObject)
     }
+
+    fun deleteEventually(item : Timer?) {
+        item?.deleteEventually()
+
+    }
+
 }

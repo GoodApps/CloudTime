@@ -9,7 +9,10 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.util.Log
+import android.view.ContextMenu
 import android.view.KeyEvent
+import android.view.MenuItem
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -31,7 +34,7 @@ public class MainActivity : BaseActivity(), LoginDialog.DialogListener {
     private var listView: RecyclerView by Delegates.notNull()
     private var loginButton: Button by Delegates.notNull()
 
-    private val adapter: TimersAdapter = TimersAdapter()
+    private val adapter: TimersAdapter = TimersAdapter(activity = this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super<BaseActivity>.onCreate(savedInstanceState)
@@ -64,6 +67,38 @@ public class MainActivity : BaseActivity(), LoginDialog.DialogListener {
             loadTimers()
         }
     }
+
+    /** Quick hackish version using ints, sorry */
+    private val MENU_ITEM_COMMAND_DELETE_TIMER = 0
+    private val MENU_ITEM_COMMAND_START_TIMER = 1
+    private val MENU_ITEM_COMMAND_STOP_TIMER = 2
+
+
+    private var currentContextMenuItem: Timer? = null
+
+    override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo?) {
+        super<BaseActivity>.onCreateContextMenu(menu, v, menuInfo)
+        currentContextMenuItem = v.getTag() as Timer
+        menu.setHeaderTitle("${currentContextMenuItem?.title}")
+        //
+        menu.add(0, MENU_ITEM_COMMAND_DELETE_TIMER, 0, "Delete")
+        menu.add(0, MENU_ITEM_COMMAND_START_TIMER, 0, "Start")
+        menu.add(0, MENU_ITEM_COMMAND_STOP_TIMER, 0, "Stop")
+//        menu.add(0, v.getId(), 0, "Action 3")
+    }
+
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+        when (item.getItemId()) {
+
+            MENU_ITEM_COMMAND_DELETE_TIMER -> TimerService().deleteEventually(currentContextMenuItem)
+
+            MENU_ITEM_COMMAND_START_TIMER -> currentContextMenuItem?.startTimer()
+
+            MENU_ITEM_COMMAND_STOP_TIMER -> currentContextMenuItem?.stopTimer()
+        }
+        return true
+    }
+
 
     private fun initEditText() {
         val editText = findViewById(R.id.main_edit) as EditText

@@ -24,13 +24,13 @@ public class Timer(
 
     fun startTimer() {
         startedAt = Date()
-        backendObject.put("startedAt", startedAt) // todo move to delegate property
+        backendObject.put(::startedAt.name, startedAt) // todo move to delegate property
         backendObject.saveEventually()
     }
 
     fun stopTimer() {
         startedAt = null
-        backendObject.remove("startedAt") // todo move to delegate property
+        backendObject.remove(::startedAt.name) // todo move to delegate property
         backendObject.saveEventually()
     }
 

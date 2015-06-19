@@ -48,9 +48,9 @@ public class TimerService {
     private fun createTimer(backendObject: ParseObject): Timer {
         return Timer(
                 backendObject.getCreatedAt(),
-                backendObject.getDate(Timer::startedAt.name),
-                backendObject.getLong(Timer::durationInSeconds.name),
-                backendObject.getString(Timer::title.name),
+                backendObject.getDate(startedAtColumn),
+                backendObject.getLong(durationColumn),
+                backendObject.getString(titleColumn),
                 backendObject)
     }
 

@@ -1,6 +1,7 @@
 package com.cloudtime.service
 
 import com.cloudtime.dto.Timer
+import com.cloudtime.toSeconds
 import com.parse.ParseException
 import com.parse.ParseObject
 import com.parse.ParseQuery
@@ -20,7 +21,7 @@ public class TimerService {
 
     fun addTimer(duration: Long, unit: TimeUnit, title: String) {
         val timer = ParseObject(timerClass)
-        timer.put(durationColumn, TimeUnit.SECONDS.convert(duration, unit))
+        timer.put(durationColumn, duration.toSeconds(unit))
         timer.put(titleColumn, title)
         timer.saveInBackground()
     }
@@ -47,16 +48,13 @@ public class TimerService {
 
     private fun createTimer(backendObject: ParseObject): Timer {
         return Timer(
-                backendObject.getCreatedAt(),
                 backendObject.getDate(startedAtColumn),
                 backendObject.getLong(durationColumn),
                 backendObject.getString(titleColumn),
                 backendObject)
     }
 
-    fun deleteEventually(item : Timer?) {
-        item?.deleteEventually()
-
+    fun deleteEventually(item : Timer) {
+        item.deleteEventually()
     }
-
 }

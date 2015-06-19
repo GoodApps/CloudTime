@@ -14,6 +14,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import com.cloudtime.R
+import com.cloudtime.alarm.AlarmAndroidService
 import com.cloudtime.dto.Timer
 import com.cloudtime.service.TimerService
 import com.cloudtime.ui.common.BaseActivity
@@ -80,33 +81,46 @@ public class MainActivity : BaseActivity(), LoginDialog.DialogListener {
     private val MENU_ITEM_COMMAND_STOP_TIMER = 2
 
 
-    private var currentContextMenuItem: Timer? = null
+    private var currentContextMenuItem: Timer by Delegates.notNull()
 
     override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo?) {
         super<BaseActivity>.onCreateContextMenu(menu, v, menuInfo)
         currentContextMenuItem = v.getTag() as Timer
-        menu.setHeaderTitle("${currentContextMenuItem?.title}")
-        //
+        menu.setHeaderTitle("${currentContextMenuItem.title}")
         menu.add(0, MENU_ITEM_COMMAND_DELETE_TIMER, 0, "Delete")
         menu.add(0, MENU_ITEM_COMMAND_START_TIMER, 0, "Start")
         menu.add(0, MENU_ITEM_COMMAND_STOP_TIMER, 0, "Stop")
-//        menu.add(0, v.getId(), 0, "Action 3")
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
         when (item.getItemId()) {
-
-            MENU_ITEM_COMMAND_DELETE_TIMER -> TimerService().deleteEventually(currentContextMenuItem)
-
-            MENU_ITEM_COMMAND_START_TIMER -> currentContextMenuItem?.startTimer()
-
-            MENU_ITEM_COMMAND_STOP_TIMER -> currentContextMenuItem?.stopTimer()
+            MENU_ITEM_COMMAND_DELETE_TIMER -> deleteTimer()
+            MENU_ITEM_COMMAND_START_TIMER -> startTimer()
+            MENU_ITEM_COMMAND_STOP_TIMER -> stopTimer()
         }
         return true
     }
 
+    private fun startAlarmService() {
+        startService(Intent(this, javaClass<AlarmAndroidService>()))
+    }
+
+    private fun deleteTimer() {
+        TimerService().deleteEventually(currentContextMenuItem)
+        startAlarmService()
+    }
+
+    private fun startTimer() {
+        currentContextMenuItem.startTimer()
+        startAlarmService()
+    }
+
+    private fun stopTimer() {
+        currentContextMenuItem.stopTimer()
+        startAlarmService()
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle item selection
         when (item.getItemId()) {
             R.id.refresh_timers -> {
                 loadTimers()
@@ -123,7 +137,7 @@ public class MainActivity : BaseActivity(), LoginDialog.DialogListener {
             if (event == null || event.getAction() == KeyEvent.ACTION_UP) {
                 val text = editText.getText().toString().trim()
                 if (text.isNotEmpty()) {
-                    addTimer(15, TimeUnit.MINUTES, text)
+                    addTimer(1, TimeUnit.MINUTES, text)
                     editText.setText("")
                 }
             }

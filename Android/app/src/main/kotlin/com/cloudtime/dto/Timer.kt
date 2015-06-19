@@ -1,11 +1,11 @@
 package com.cloudtime.dto
 
-import com.parse.ParseACL
+import com.cloudtime.toMillis
 import com.parse.ParseObject
 import java.util.Date
+import java.util.concurrent.TimeUnit
 
-public class Timer(
-        val creationTime: Date,
+data class Timer(
         var startedAt: Date?,
         val durationInSeconds: Long,
         val title: String?,
@@ -13,10 +13,9 @@ public class Timer(
          * not expose the dependency to parse.com */
         val backendObject: ParseObject
 ) {
-    object Metadata {
-        val CLASS_NAME = "Timer"
+    fun started() = startedAt != null
 
-    }
+    fun endsAt() = startedAt!!.getTime() + durationInSeconds.toMillis(TimeUnit.SECONDS)
 
     fun deleteEventually() {
         backendObject.deleteEventually()

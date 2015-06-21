@@ -27,7 +27,9 @@ public class TimerItemAdapter(
 
         val startTimeText = if (timer.startedAt == null) ""
                 else SimpleDateFormat("h:mm a").format(timer.startedAt)
-        h.textView.setText("${timer.durationInSeconds / 60}m; ${timer.title}\n" +
+        val seconds = timer.durationInSeconds
+        val durationText = "${seconds / 60}m ${seconds % 60}s"
+        h.textView.setText("$durationText; ${timer.title}\n" +
                 "${startTimeText}")
 
         activity.registerForContextMenu(h.itemView)

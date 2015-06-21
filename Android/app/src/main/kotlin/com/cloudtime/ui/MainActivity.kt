@@ -12,6 +12,7 @@ import android.util.Log
 import android.view.*
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import com.cloudtime.R
 import com.cloudtime.alarm.AlarmAndroidService
@@ -22,8 +23,10 @@ import com.cloudtime.ui.login.LoginDialog
 import com.parse.ParseUser
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
+import java.lang.Long.parseLong
 import java.util.concurrent.TimeUnit
 import kotlin.properties.Delegates
+import kotlin.text.Regex
 
 public class MainActivity : BaseActivity(), LoginDialog.DialogListener {
 
@@ -132,17 +135,31 @@ public class MainActivity : BaseActivity(), LoginDialog.DialogListener {
 
 
     private fun initEditText() {
-        val editText = findViewById(R.id.main_edit) as EditText
-        editText.setOnEditorActionListener { v, actionId, event ->
+        val titleEdit = findViewById(R.id.main_edit) as EditText
+        val durationEdit = findViewById(R.id.duration_edit) as EditText
+        val editorAction: (TextView, Int, KeyEvent) -> Boolean = { v, actionId, event ->
             if (event == null || event.getAction() == KeyEvent.ACTION_UP) {
-                val text = editText.getText().toString().trim()
+                val text = titleEdit.getText().toString().trim()
                 if (text.isNotEmpty()) {
-                    addTimer(1, TimeUnit.MINUTES, text)
-                    editText.setText("")
+                    var durationText = durationEdit.getText().toString().trim()
+
+                    val durationUnit = if ( durationText.contains("s", ignoreCase = true)) {
+                        TimeUnit.SECONDS
+                    } else {
+                        TimeUnit.MINUTES
+                    }
+                    val regex: Regex = "s|S|m|M".toRegex()
+                    durationText = durationText.replace(regex, "").trim()
+
+                    val duration = parseLong(durationText)
+                    addTimer(duration, durationUnit, text)
+                    titleEdit.setText("")
                 }
             }
             true
         }
+        titleEdit.setOnEditorActionListener(editorAction)
+        durationEdit.setOnEditorActionListener(editorAction)
     }
 
     private fun initListView() {

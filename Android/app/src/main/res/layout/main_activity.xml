@@ -12,11 +12,22 @@
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize" />
 
-    <EditText
-        android:id="@+id/main_edit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="text" />
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:layout_gravity="center_horizontal">
+        <EditText
+                android:id="@+id/duration_edit"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:inputType="text" />
+        <EditText
+                android:id="@+id/main_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text" />
+
+    </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/main_list"

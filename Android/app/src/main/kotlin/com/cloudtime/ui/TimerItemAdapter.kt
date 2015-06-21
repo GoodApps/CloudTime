@@ -25,14 +25,28 @@ public class TimerItemAdapter(
     override fun onBind(holder: BaseViewHolder) {
         val h = holder as Holder
 
-        val startTimeText = if (timer.startedAt == null) ""
-                else SimpleDateFormat("h:mm a").format(timer.startedAt)
-        val seconds = timer.durationInSeconds
-        val durationText = "${seconds / 60}m ${seconds % 60}s"
+//        val startTimeText = if (timer.startedAt == null) ""
+//                else SimpleDateFormat("h:mm a").format(timer.startedAt)
+        val durationSeconds = timer.durationInSeconds
+        val remainingTimeText =
+            if ( timer.startedAt != null ) {
+                val remainingSeconds = (timer.startedAt!!.getTime() + durationSeconds * 1000 - System.currentTimeMillis()) / 1000
+                "${remainingSeconds / 60}m ${remainingSeconds % 60}s"
+            } else {
+                ""
+            }
+        val durationText = "${durationSeconds / 60}m ${durationSeconds % 60}s"
         h.textView.setText("$durationText; ${timer.title}\n" +
-                "${startTimeText}")
+                "${remainingTimeText}")
 
         activity.registerForContextMenu(h.itemView)
+        h.itemView.setOnClickListener({
+            if ( timer.started() ) {
+                timer.stopTimer()
+            } else {
+                timer.startTimer()
+            }
+        })
         h.itemView.setTag(timer)
     }
 

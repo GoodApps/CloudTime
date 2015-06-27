@@ -41,9 +41,10 @@ public class TimerService {
     }
 
     private fun loadTimersImpl(): List<Timer> {
-        return ParseQuery.getQuery<ParseObject>(timerClass)
+        val list = ParseQuery.getQuery<ParseObject>(timerClass)
                 .find()
                 .map { createTimer(it) }
+        return list
     }
 
     private fun createTimer(backendObject: ParseObject): Timer {

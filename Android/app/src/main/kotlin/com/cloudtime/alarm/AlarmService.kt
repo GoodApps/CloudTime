@@ -17,7 +17,7 @@ class AlarmService(private val context: Context) {
     fun createAlarm(timers: List<Timer>) {
         val sorted = timers.sortBy(timerEndsAt())
         val next = sorted.firstOrNull(closestTimer())
-        Log.e("tag", "my_tag ${next}")
+        Log.e("tag", "createAlarm: my_tag next: ${next}")
         if (next != null) {
             am.set(AlarmManager.RTC_WAKEUP, next.endsAt(), createPendingIntent())
         } else {

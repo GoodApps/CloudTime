@@ -137,7 +137,7 @@ public class MainActivity : BaseActivity(), LoginDialog.DialogListener {
     private fun initEditText() {
         val titleEdit = findViewById(R.id.main_edit) as EditText
         val durationEdit = findViewById(R.id.duration_edit) as EditText
-        val editorAction: (TextView, Int, KeyEvent) -> Boolean = { v, actionId, event ->
+        val editorAction: (TextView, Int, KeyEvent?) -> Boolean = { v, actionId, event ->
             if (event == null || event.getAction() == KeyEvent.ACTION_UP) {
                 val text = titleEdit.getText().toString().trim()
                 if (text.isNotEmpty()) {
@@ -198,6 +198,7 @@ public class MainActivity : BaseActivity(), LoginDialog.DialogListener {
         subscription = TimerService().loadTimers()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ updateAdapter(it) }, { handleError(it) })
+        startAlarmService()
     }
 
     private fun updateAdapter(timers: List<Timer>) {
